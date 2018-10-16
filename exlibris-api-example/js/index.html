@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Link Checker Example</title>
+</head>
+
+<body>
+	
+	<ul>
+		<li><a href="http://rrx.chadkluck.net">Good - http://rrx.chadkluck.net</a></li>
+		<li><a href="https://rrx.chadkluck.net">Good - https://rrx.chadkluck.net</a></li>
+		<li><a href="https://rrx.chadkluck.net/not-a-page">404 - https://rrx.chadkluck.net/not-a-page</a></li>
+		<li><a href="http://chadkluck.net">Good - http://chadkluck.net</a></li>
+		<li><a href="https://chadkluck.net">Good - https://chadkluck.net</a></li>
+		<li><a href="https://chadkluck.net/not-a-page">404 - https://chadkluck.net/not-a-page</a></li>
+		<li><a href="http://api.chadkluck.net">Good - http://api.chadkluck.net</a></li>
+		<li><a href="http://www.bbc.com">BBC</a></li>
+		<li><a href="http://www.google.com">Google</a></li>
+		<li><a href="http://www.google.com/not-a-page">404 - Google</a></li>
+		<li><a href="https://asdf.63klabs.net">No such site</a></li>
+		<li><a href="http://dev.63klabs.net/index2.html">Not there, but excluded</a></li>
+		<li><a href="mailto:me@asdf.com">Mailto - excluded</a></li>
+		<li><a href="javascript:void(0)">javascript - excluded</a></li>
+		<li><a href="#">in page anchor - excluded</a></li>
+	</ul>
+	
+	<h2>Code</h2>
+	<p>After you have configured the api php page, copy the code below (with your customizations to linkchecker_config) and paste it into your main js file that is included on the pages you wish to have a link checker on.</p>
+	<textarea style="color:blue; background-color:lightgrey;border: solid black 1px;padding:10px 10px 10px 10px; width: 90%;height:800px" id="displayCode"></textarea>
+	
+<script id="theCode">
+	
+// this is your configuration, modify it to suit your needs. apiURL and exclude should be updated, everything else can remain as is to get started
+const linkchecker_config = {
+		silence: { allowToggle: true, default: false },
+		checkfor: {anchor: true, img: true, link: true, iframe: true, script: true }, // most of these are for future, only anchor is checked
+		allowMultipleExecutions: false, // no reason to ever set this as true
+		apiURL: "https://dev.63klabs.net/link-checker/", // set this to the location of the link-checker php code
+		exclude: ["^https?:\/\/dev\.63klabs\.net"] // an array of regex values to exclude from checking (either sites that don't check properly or don't like crawlers)
+	};
+		
+/* ************************************************************
+ *  Keystrokes to load link checker
+ *  
+ *  If the visitor strikes the up arrow on the keyboard 3x in a row the script will be loaded
+ *  Be sure to change sc.src to the location of the link-checker.js file!
+ */
+		
+(function() {
+
+	"use strict";
+
+	var ks = []; // keystrokes (clears out each time the sequence is not being met)
+	var seq = [38, 38, 38]; // the sequence: 3 up arrows
+	
+	var egg = function (event) {
+		
+		/* We only collect keystrokes if they are matching the sequence
+		   If a keystroke does not match what is expected to be next, the whole log is emptied
+		 */
+		if ( event.keyCode === seq[ks.length] ) {
+			ks.push(event.keyCode); // add it to the keystroke
+		} else {
+			ks = []; // clear array
+		}
+		
+		// did we meet the sequence?
+		if(ks.length === seq.length) { 
+			
+			// add the script to the page
+			var s=document.getElementsByTagName('body')[0];
+			var sc=document.createElement('script');
+			sc.type='text/javascript';
+			sc.async=true;
+			sc.src='link-checker.js'; // place full url of location of your link-checker.js script ex: https://example.com/link-checker/js/link-checker.js
+			s.appendChild(sc,s);
+			
+			// already added script so we don't need the event listener anymore
+			document.removeEventListener("keydown", egg);
+			
+			ks=[];
+		}
+
+	};
+
+	// attach egg to body of page
+	document.addEventListener("keydown", egg);
+})();
+
+</script>
+
+<script>
+(function() {
+	// this just displays the code on the page for informational purposes. This is not part of link-checker and should not be used.
+	var c = document.getElementById("theCode");
+	var d = document.getElementById("displayCode");
+	d.value = c.innerHTML;
+})();
+</script>
+</body>
+</html>
