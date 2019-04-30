@@ -211,7 +211,7 @@ if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = nu
 
 			// Code example to get you started
 
-			// ----- BEGIN API CODE EXAMPLE USING DATA RETURNED FROM api.chadkluck.net/games
+			// ----- BEGIN API CODE EXAMPLE
 
 			// create a div to put it in
 			var ul = document.createElement("ul");
