@@ -31,11 +31,6 @@
     ********************************************************************************************
 */
 
-// exlibrisexample
-if (typeof exlibrisexample === 'undefined') { exlibrisexample = false; } // let init take care of setting true
-if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = null; } // let init take care of setting true
-
-
 /*  ============================================================================================
     ********************************************************************************************
     SELF-INVOKING FUNCTION
@@ -60,11 +55,10 @@ if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = nu
 	// this can eithr be passed in as the second param (very bottom) or set here
 	var configDefault = {
 		silence: { allowToggle: true, default: false },
-		allowMultipleExecutions: false, // no reason to ever set this as true
 		apiURL: "", // set this to the location of the api
 	};
 
-	const CONFIG = configParam !== null ? configParam : configDefault;
+	const CONFIG = configDefault;
 
 	/* Runtime Settings (Read/Write) */
 	var settings = {
@@ -81,14 +75,9 @@ if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = nu
 	 *  Initial function called at runtime
 	*/
 	var init = function(){
-		// check to see if it has already initialized or if another copy of the code has already ran
-		if( !getGlobalInit() || (getGlobalInit() && CONFIG.allowMultipleExecutions ) ) {
-			setGlobalInit(true);
-			attribution();
-			setSilence(CONFIG.silence.default);
-			execute();
-		}
-
+		attribution();
+		setSilence(CONFIG.silence.default);
+		execute();
 	};
 
 	/* =====================================================================
@@ -142,19 +131,6 @@ if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = nu
 		debug("Loading " + info.name + " by " + info.author);
 		debug("Version " + info.version);
 		if(info.code !== "") { debug("Get Code: " + info.code); }
-	};
-
-	/* =====================================================================
-	 *  getGlobalInit() / setGlobalInit()
-	 *
-	 */
-	var getGlobalInit = function() {
-		return myInit;
-	};
-
-	var setGlobalInit = function(b) {
-		myInit = b === true ? true : false; // don't blindly accept what is passed
-		return getGlobalInit();
 	};
 
 	/* =====================================================================
@@ -248,4 +224,4 @@ if (typeof exlibrisexample_config === 'undefined') { exlibrisexample_config = nu
 
 	init();
 
-})(exlibrisexample, exlibrisexample_config);
+})();
